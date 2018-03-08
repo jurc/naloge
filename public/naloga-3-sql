@@ -1,0 +1,5 @@
+SELECT admin_user_group.user_id,
+	 (SELECT GROUP_CONCAT(id) 
+		FROM admin_group 
+	   WHERE admin_group.id != admin_user_group.group_id) as uporabnik_ni_v_skupini
+FROM admin_user_group

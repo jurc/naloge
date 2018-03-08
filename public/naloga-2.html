@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="si">
+	<head>
+	
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>Testna naloga 2</title>
+		
+		<meta name="keywords" content="test" />
+		<meta name="description" content="Testna naloga 2" />
+		<meta name="robots" content="noindex" />
+		<meta name="title" content="Testna naloga 2" />
+		<meta name="author" content="Pesko Jure" /> 
+		<meta name="language" content="Slovenian" />
+		<meta name="rating" content="General" />
+		<meta name="copyright" content="Pesko Jure" />
+		<meta name="distribution" content="global" />
+		<meta name="revisit-after" content="7 days" />
+		<meta http-equiv="Cache-control" content="public">
+
+		<link href="/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="/css/c3.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/css/custom.css?ver=1"/>
+		
+	</head>
+	<body>
+	
+	
+	<div class="container margin-top">
+		<div class="row justify-content-md-center">
+			<div class="col col-md-8">
+			
+				<ul class="nav nav-pills">
+				  <li class="nav-item">
+					<a class="nav-link nav-load" href="#" data-type="1">Razmerje med sledilci</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link" href="#" data-type="2">Razmerje med TWEET LIKE-ov</a>
+				  </li>
+				</ul>
+				
+				<div class="nav-content">
+				
+				  <div class="row justify-content-md-center loader-frame">
+					<div class="loader"></div>
+				  </div>
+				  
+				  <div id="content-load">
+					  <h2 align="center">title</h2>
+					  <div id="load-chart"></div>
+				  </div>
+				
+				</div>
+				
+			</div>
+		</div>
+	</div>
+		
+		
+		
+		<script src="/js/jquery.min.js"></script>
+		<script src="https://d3js.org/d3.v3.min.js"></script>
+		<script src="/js/c3.min.js"></script>
+		<script>
+		$(document).ready(function() {
+			
+			$(".nav li a").on("click", function(event) {
+				event.preventDefault();
+				$("#content-load").hide();
+				$(".loader-frame").show();
+				
+				$(".nav li a").removeClass("active");
+				$(this).addClass("active");
+				
+				var type = $(this).data("type");
+				var title = $(this).html();
+				$.ajax({
+					url: "/naloga-2-query.php?type=" + type,
+					success: function(data) {
+						var chart_data = JSON.parse(data);
+						
+						$("#content-load h2").html( title );
+						
+						var chart = c3.generate({
+							bindto: '#load-chart',
+							data: {
+								columns: [
+									['DJ Umek', chart_data.UMEK_1605],
+									['Katy Perry', chart_data.katyperry],
+									['Demi Lovato', chart_data.ddlovato],
+								],
+								type : 'pie'
+							}
+						});
+						
+						
+						
+						$(".loader-frame").hide();
+						$("#content-load").show();
+					}
+				});
+			});
+			
+			$(".nav-load").trigger("click");
+			
+		});
+		</script>
+	
+	</body>
+</html>

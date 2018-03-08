@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="si">
+	<head>
+	
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>Testna naloga 1</title>
+		
+		<meta name="keywords" content="test" />
+		<meta name="description" content="Testna naloga 1" />
+		<meta name="robots" content="noindex" />
+		<meta name="title" content="Testna naloga 1" />
+		<meta name="author" content="pesko.si" /> 
+		<meta name="language" content="Slovenian" />
+		<meta name="rating" content="General" />
+		<meta name="copyright" content="Pesko Jure" />
+		<meta name="distribution" content="global" />
+		<meta name="revisit-after" content="7 days" />
+		<meta http-equiv="Cache-control" content="public">
+
+		<link href="/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="/css/custom.css?ver=1"/>
+		
+	</head>
+	<body>
+	
+	
+	<div class="container margin-top">
+		<div class="row justify-content-md-center">
+			<div class="col col-md-8">
+			
+				<ul class="nav nav-pills">
+				  <li class="nav-item">
+					<a class="nav-link nav-load" href="#" data-name="umek_1605">DJ Umek</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link" href="#" data-name="katyperry">Katy Perry</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link" href="#" data-name="ddlovato">Demi Lovato</a>
+				  </li>
+				</ul>
+				
+				<div class="nav-content">
+				
+				  <div class="row justify-content-md-center loader-frame">
+					<div class="loader"></div>
+				  </div>
+				  
+				  <div id="content-load">
+					  <div class="row">
+						<div class="col-md-5 text-center twitter-profile">
+							<img src="/img/profile.jpg" class="rounded-circle" alt="Cinque Terre">
+						</div>
+					  </div>
+					  
+					  <div class="row">
+						<div class="col-md-3 col-label">Naziv glasbenika:</div>
+						<div class="col-md-3 twitter-name"></div>
+					  </div>
+					  <div class="row">
+						<div class="col-md-3 col-label">Followers:</div>
+						<div class="col-md-3 twitter-followers"></div>
+					  </div>
+					  <div class="row">
+						<div class="col-md-3 col-label">Število tweetov:</div>
+						<div class="col-md-3 twitter-tweets-num"></div>
+					  </div>
+					  
+					  <div class="row margin-top2">
+						<div class="col-md-12 col-label">Tweeti v mesecu januar 2018:</div>
+						<div class="col-md-12 twitter-tweets"></div>
+					  </div>
+				  </div>
+				
+				</div>
+				
+			</div>
+		</div>
+	</div>
+		
+		
+		
+		<script src="/js/jquery.min.js"></script>
+		<script>
+		$(document).ready(function() {
+			
+			$(".nav li a").on("click", function(event) {
+				event.preventDefault();
+				$("#content-load").hide();
+				$(".loader-frame").show();
+				
+				$(".nav li a").removeClass("active");
+				$(this).addClass("active");
+				
+				var screen_name = $(this).data("name");
+				$.ajax({
+					url: "/naloga-1-api.php?name=" + screen_name,
+					success: function(data) {
+						var twitter = JSON.parse(data);
+						
+						$(".twitter-profile img").attr("src", twitter.profile.profile_image_url);
+						$(".twitter-name").html(twitter.profile.name);
+						$(".twitter-followers").html(twitter.profile.followers_count);
+						$(".twitter-tweets-num").html(twitter.profile.statuses_count);
+						
+						$(".twitter-tweets").html("");
+						$.each(twitter.timeline, function(index, value) {
+							
+							$(".twitter-tweets").append("<div class='tweet-post'><b>Text</b><br>" + value.text + "<br><b>Retweets</b> " + value.retweet_count + "<br><b>Likes</b> " + value.favorite_count + "</div>");
+							
+						});
+						
+						$(".loader-frame").hide();
+						$("#content-load").show();
+					}
+				});
+			});
+			
+			$(".nav-load").trigger("click");
+			
+		});
+		</script>
+	
+	</body>
+</html>
